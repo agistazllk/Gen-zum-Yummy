@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stok Barang - Admin GOGUMA</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f8f9fc;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #007bff, #00bfff);
+      color: white;
+      padding: 25px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      padding: 15px 25px;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar ul li:hover,
+    .sidebar ul li.active {
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+    }
+
+    .sidebar ul li i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+
+    .logout {
+      text-align: center;
+      padding: 15px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .logout:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .content h1 {
+      font-size: 26px;
+      color: #1a1a1a;
+      margin-bottom: 25px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    th, td {
+      padding: 14px 20px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .btn-tambah {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      transition: 0.3s;
+    }
+
+    .btn-tambah:hover {
+      background-color: #0066cc;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div>
+      <h2>Admin GOGUMA</h2>
+      <ul>
+        <li><i class="fa-solid fa-house"></i><a href="admin.html">Dashboard</a></li>
+        <li><i class="fa-solid fa-cart-shopping"></i><a href="penjualan.html">Penjualan</a></li>
+        <li class="active"><i class="fa-solid fa-box"></i><a href="#">Stok Barang</a></li>
+        <li><i class="fa-solid fa-chart-line"></i><a href="#">Laporan</a></li>
+        <li><i class="fa-solid fa-users"></i><a href="#">Data Pengguna</a></li>
+        <li><i class="fa-solid fa-store"></i><a href="index.html">Kembali ke Toko</a></li>
+      </ul>
+    </div>
+
+    <div class="logout" onclick="logoutAdmin()">
+      <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </div>
+  </div>
+
+  <div class="content">
+    <h1>Data Stok Barang</h1>
+
+    <button class="btn-tambah" onclick="tambahStok()">+ Tambah Stok</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Produk</th>
+          <th>Jumlah Stok</th>
+          <th>Harga</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="data-stok">
+        <!-- Data stok akan muncul di sini -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let stok = [
+      { produk: "Nasi Bakar Ayam", jumlah: 15, harga: 20000 },
+      { produk: "Ubi Ungu Keju", jumlah: 20, harga: 15000 },
+      { produk: "Brownies Ubi", jumlah: 10, harga: 25000 },
+    ];
+
+    function renderStok() {
+      const tbody = document.getElementById("data-stok");
+      tbody.innerHTML = "";
+
+      stok.forEach((item, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.produk}</td>
+            <td>${item.jumlah}</td>
+            <td>Rp ${item.harga.toLocaleString()}</td>
+            <td><button onclick="hapusStok(${index})">Hapus</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    function tambahStok() {
+      const produk = prompt("Masukkan nama produk:");
+      const jumlah = prompt("Masukkan jumlah stok:");
+      const harga = prompt("Masukkan harga satuan:");
+
+      if (produk && jumlah && harga) {
+        stok.push({
+          produk,
+          jumlah: parseInt(jumlah),
+          harga: parseInt(harga),
+        });
+        renderStok();
+        alert("✅ Data stok berhasil ditambahkan!");
+      } else {
+        alert("⚠️ Data belum lengkap!");
+      }
+    }
+
+    function hapusStok(index) {
+      if (confirm("Yakin ingin menghapus stok ini?")) {
+        stok.splice(index, 1);
+        renderStok();
+      }
+    }
+
+    function logoutAdmin() {
+      localStorage.removeItem("loginAdmin");
+      window.location.href = "login.html";
+    }
+
+    // tampilkan data stok saat halaman dibuka
+    renderStok();
+  </script>
+</body>
+</html>

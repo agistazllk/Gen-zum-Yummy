@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DIMSUM - Menu Produk Pilihan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        /* Dimsum Theme (Red & Gold) - Consistency */
+        :root{
+            --red:#d90429;
+            --gold:#ffc300;
+            --red-dark:#a4001c;
+            --bg:#fcf8f3; /* Light Cream */
+            --white:#ffffff;
+            --text:#333;
+        }
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family: "Poppins", sans-serif;
+            background:var(--bg);
+            color:var(--text);
+        }
+        /* Navbar */
+        .navbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            background: var(--red);
+            padding:15px 50px;
+            color:white;
+            gap:20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo{display:flex;align-items:center;font-weight:700;font-size: 1.5rem;}
+        .logo i{margin-right:10px;font-size:1.5rem}
+        .menu{list-style:none;display:flex;gap:30px;margin:0;padding:0}
+        .menu a{color:white;text-decoration:none;font-weight:600;transition: 0.3s;}
+        .menu a:hover,
+        .menu a.active{color:var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 3px;}
+
+        .search-cart{display:flex;align-items:center;gap:25px}
+        .search-box{display:flex;background:white;border-radius:25px;overflow:hidden;border:1px solid var(--red-dark)}
+        .search-box input{border:0;padding:8px 12px;width:180px;outline:none}
+        .search-box button{border:0;background:none;padding:8px 10px;cursor:pointer;color:var(--red)}
+
+        .cart{position:relative;color:white;font-size:1.6rem;cursor:pointer}
+        .cart span{
+            position:absolute;top:-10px;right:-12px;
+            background:var(--gold);color:var(--red-dark);
+            font-size:0.75rem;padding:2px 7px;border-radius:50%;
+            font-weight: bold; border: 2px solid white;
+        }
+
+        /* Products Section */
+        .products{padding:50px 20px;text-align:center}
+        .products h1{color:var(--red-dark);margin-bottom:30px;font-size: 2.2rem;}
+        .products p.tagline {color: #777; font-size: 1.2rem; margin-bottom: 40px;}
+        .product-container{display:flex;justify-content:center;flex-wrap:wrap;gap:30px}
+        
+        /* Product Card Styling */
+        .product-card{
+            background:var(--white);
+            width:300px;
+            border-radius:12px;
+            padding:20px;
+            text-align:center;
+            box-shadow:0 8px 20px rgba(0,0,0,0.1);
+            transition:all .3s;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        .product-card:hover{transform:translateY(-5px) scale(1.02); box-shadow:0 12px 25px rgba(0,0,0,0.15);}
+        
+        /* NEW IMAGE STYLE */
+        .product-image {
+            width: 100%;
+            height: 300px; 
+            object-fit: cover; 
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .product-card h3{color:var(--red);margin:12px 0 8px; font-size: 1.4rem;}
+        .product-card p{color:#555;font-size:.9rem; min-height: 40px;}
+        .product-card h4{color:var(--red-dark);margin:10px 0;font-weight:800;font-size: 1.2rem;}
+        
+        .product-card button{
+            background:var(--red);
+            color:white;
+            border:0;
+            padding:10px 25px;
+            border-radius:25px;
+            cursor:pointer;
+            font-weight:600;
+            transition: background 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        .product-card button:hover{background:var(--red-dark); transform: scale(1.05);}
+        
+        /* Modal */
+        .modal{display:none;position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1200}
+        .modal-content{
+            background:white;
+            margin:7% auto; 
+            border-radius:12px;
+            padding:25px;
+            width:90%;
+            max-width:450px;
+            position:relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-content h2{color:var(--red); margin-bottom: 15px;}
+        .close-btn{position:absolute;right:15px;top:10px;font-size:1.8rem;color:var(--red);cursor:pointer}
+        .cart-items{max-height:300px;overflow-y:auto;margin-bottom:15px}
+        .cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #eee}
+        .item-info { flex-grow: 1; }
+        .item-price { font-weight: 600; color: var(--red-dark); }
+        
+        .cart-total{text-align:right;font-weight:800;color:var(--red);margin-top:15px;font-size: 1.2rem; border-top: 2px solid #eee; padding-top: 10px;}
+        .checkout-btn{background:var(--red);color:white;padding:12px;border-radius:25px;border:0;width:100%;font-weight:700;cursor:pointer;margin-top:20px;}
+        .checkout-btn:hover{background:var(--red-dark)}
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 10px;
+            transition: color 0.2s;
+        }
+        .remove-btn:hover {
+            color: var(--red);
+        }
+
+        /* Footer */
+        footer{
+            background:var(--red-dark);
+            color:#fff;
+            padding:30px 14px;
+            text-align:center;
+            margin-top:50px;
+            border-top: 5px solid var(--gold);
+        }
+        footer div:first-child{font-weight:700;color:var(--gold); font-size: 1.1rem;}
+
+        /* Responsive */
+        @media (max-width:768px){ 
+            .navbar{flex-direction: column; gap: 10px; padding: 15px 20px;}
+            .menu{display:none;} 
+            .search-cart{width: 100%; justify-content: space-around;}
+            .search-box input{width:150px}
+            .product-card{width:90%; max-width: none;}
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><i class="fa-solid fa-bao"></i> DIMSUM</div>
+
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a class="active" href="products.html">Produk</a></li>
+            <li><a href="about.html">Tentang Kami</a></li>
+            <li><a href="contact.html">Kontak</a></li>
+            <li><a href="login.html" id="loginLogoutBtn">Login</a></li> 
+            <li><a href="admin.html">Admin</a></li> 
+        </ul>
+
+        <div class="search-cart">
+            <div class="search-box">
+                <input id="searchInput" onkeyup="searchProduct()" placeholder="Cari menu..." />
+                <button aria-label="Search"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="cart" onclick="toggleCart()" role="button" aria-label="Keranjang Belanja">
+                <i class="fa fa-shopping-cart"></i>
+                <span id="cartCount">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="products">
+        <h1>Pilihan Menu Spesial</h1>
+        <p class="tagline">Silakan login terlebih dahulu untuk melakukan pemesanan.</p>
+
+        <div class="product-container" id="productContainer">
+            <div class="product-card" data-name="Dimsum Ayam Kukus">
+                <img src="dimsum.jpg" alt="Foto Dimsum Ayam Kukus" class="product-image" />
+                <h3>Dimsum Ayam Kukus</h3>
+                <p>Dimsum klasik dengan isian daging ayam cincang yang padat dan gurih. Disajikan hangat.</p>
+                <h4>Rp 10.000</h4>
+                <button onclick="addToCart('Dimsum Ayam Kukus', 25000)">Tambah ke Keranjang</button>
+            </div>
+
+            <div class="product-card card-mango-sago" data-name="Mango Sago Dessert">
+                <img src="manggo sago.jpg" alt="Foto Mango Sago Dessert" class="product-image" />
+                <h3>Mango Sago</h3>
+                <p>Dessert segar dari potongan mangga, sagu mutiara, dan krim manis. Penutup yang sempurna.</p>
+                <h4>Rp 10.000</h4>
+                <button onclick="addToCart('Mango Sago Dessert', 30000)">Tambah ke Keranjang</button>
+            </div>
+
+        </div>
+    </section>
+
+    <div id="cartModal" class="modal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-labelledby="cartTitle">
+            <span class="close-btn" onclick="toggleCart()" role="button" aria-label="Tutup">&times;</span>
+            <h2 id="cartTitle">Keranjang Belanja</h2>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-total" id="cartTotal">Total: Rp 0</div>
+            <button class="checkout-btn" onclick="goToCheckout()">Lanjut ke Pembayaran</button>
+        </div>
+    </div>
+
+    <footer>
+        <div style="font-weight:700;color:var(--gold)">DIMSUM LEZAT</div>
+        <div style="margin-top:6px;font-size:.95rem;color:#ddd">© 2025 Toko Dimsum Premium</div>
+    </footer>
+
+    <script>
+        // Memastikan keranjang disimpan/diambil dari Local Storage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Cek status login saat halaman dimuat
+        const loginLogoutBtn = document.getElementById('loginLogoutBtn');
+        checkLoginStatus(); 
+
+        function isLoggedIn() {
+            // Mengasumsikan status login disimpan di localStorage dengan kunci 'userLoggedIn'
+            return localStorage.getItem('userLoggedIn') === 'true';
+        }
+
+        function checkLoginStatus() {
+            if (isLoggedIn()) {
+                loginLogoutBtn.innerText = 'Logout';
+                loginLogoutBtn.href = '#'; // Mengubahnya menjadi action button
+                loginLogoutBtn.onclick = handleLogout;
+            } else {
+                loginLogoutBtn.innerText = 'Login';
+                loginLogoutBtn.href = 'login.html'; // Arahkan ke halaman login
+                loginLogoutBtn.onclick = null;
+            }
+        }
+
+        function handleLogout(e) {
+            e.preventDefault();
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('cart'); // Hapus keranjang saat logout
+            cart = [];
+            document.getElementById('cartCount').innerText = 0;
+            checkLoginStatus();
+            updateCartModal();
+            alert('Anda telah logout. Keranjang Anda dikosongkan.');
+        }
+
+        function addToCart(name, price){
+            if (!isLoggedIn()) {
+                alert("Anda harus login terlebih dahulu untuk menambah produk ke keranjang!");
+                // Opsional: Arahkan ke halaman login
+                window.location.href = 'login.html'; 
+                return;
+            }
+
+            cart.push({name, price});
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById('cartCount').innerText = cart.length;
+            updateCartModal();
+            console.log(name + " berhasil ditambahkan!");
+        }
+
+        function toggleCart(){
+            const modal = document.getElementById('cartModal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+            updateCartModal();
+        }
+
+        function removeItem(index){
+            if(confirm("Yakin ingin menghapus item ini dari keranjang?")){
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                document.getElementById('cartCount').innerText = cart.length;
+                updateCartModal();
+            }
+        }
+
+        function updateCartModal(){
+            const list = document.getElementById('cartItems');
+            const totalEl = document.getElementById('cartTotal');
+            list.innerHTML = '';
+            let total = 0;
+            
+            if (cart.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #888;">Keranjang Anda masih kosong.</p>';
+            } else {
+                cart.forEach((it, idx) => {
+                    total += it.price;
+                    const div = document.createElement('div');
+                    div.className = 'cart-item';
+                    const formattedPrice = it.price.toLocaleString('id-ID');
+                    
+                    div.innerHTML = `
+                        <span class="item-info">${it.name}</span>
+                        <span class="item-price">Rp ${formattedPrice}</span>
+                        <button class="remove-btn" onclick="removeItem(${idx})" aria-label="Hapus ${it.name}">&times;</button>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+            totalEl.innerText = 'Total: Rp ' + total.toLocaleString('id-ID');
+        }
+
+        function goToCheckout(){
+            if (!isLoggedIn()) {
+                alert("Anda harus login untuk melanjutkan ke pembayaran!");
+                window.location.href = 'login.html'; 
+                return;
+            }
+            if(cart.length === 0){ alert('Keranjang masih kosong!'); return; }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            window.location.href = 'checkout.html';
+        }
+
+        function searchProduct(){
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.getElementsByClassName('product-card');
+            for(let i=0;i<cards.length;i++){
+                const title = cards[i].getAttribute('data-name').toLowerCase();
+                cards[i].style.display = title.includes(q) ? 'block' : 'none';
+            }
+        }
+
+        // Close modal saat klik di luar konten
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('cartModal');
+            if(e.target === modal) modal.style.display = 'none';
+        });
+
+        // Update count dan modal saat pertama kali dimuat
+        document.getElementById('cartCount').innerText = cart.length;
+        updateCartModal();
+    </script>
+</body>
+</html>

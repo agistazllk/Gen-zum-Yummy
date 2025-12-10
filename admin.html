@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - DIMSUM LEZAT</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        /* Dimsum Admin Theme (Red & Gold) */
+        :root{
+            --red-main: #d90429;
+            --red-dark: #a4001c;
+            --gold: #ffc300;
+            --bg: #fcf8f3; /* Light Cream */
+            --white: #fff;
+            --text: #222;
+        }
+        *{box-sizing:border-box}
+        body{margin:0;font-family:"Poppins",sans-serif;background:var(--bg)}
+
+        /* --- DASHBOARD STYLES --- */
+        #dashboard-view { display: none; } /* Default hidden */
+        .sidebar{
+            width:250px;height:100vh;position:fixed;left:0;top:0;
+            background:linear-gradient(180deg, var(--red-dark), var(--red-main));
+            color:white;padding:22px 0;display:flex;flex-direction:column;justify-content:space-between;
+            box-shadow:3px 0 16px rgba(0,0,0,0.2)
+        }
+        .sidebar h2{text-align:center;margin:0 12px 10px;font-size:22px;letter-spacing:1px}
+        .sidebar ul{list-style:none;padding:0;margin:0}
+        .sidebar ul li{padding:12px 20px;display:flex;gap:12px;align-items:center;transition: background 0.2s;}
+        .sidebar ul li:hover,.sidebar ul li.active{background:rgba(255,255,255,0.2);cursor:pointer}
+        .sidebar a{color:white;text-decoration:none;display:block;width:100%}
+        .logout{padding:12px 20px;text-align:center;background:rgba(255,255,255,0.15);margin:0 12px;border-radius:8px;cursor:pointer;font-weight: 600; transition: background 0.2s;}
+        .logout:hover{background:rgba(255,255,255,0.25);}
+        
+        .content{margin-left:250px;padding:35px}
+        h1{color:var(--red-dark);margin:0 0 20px}
+        
+        .info-cards{display:flex;gap:20px;flex-wrap:wrap;margin-bottom: 30px;}
+        .card{background:var(--white);padding:20px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.1);flex:1;min-width:220px;text-align:center;border-left: 5px solid var(--red-main);}
+        .card i{font-size:32px;color:var(--red-main);margin-bottom:10px}
+        .card h3{margin:8px 0;color:#555;font-size: 1.1rem;}
+        .card p{font-weight:800;font-size:1.4rem;color:var(--red-dark)}
+        
+        table{width:100%;border-collapse:collapse;margin-top:22px;background:var(--white);border-radius:10px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,0.08)}
+        th,td{padding:15px 12px;text-align:center;border-bottom:1px solid #f1f1f1; font-size: 0.95rem;}
+        th{background:var(--red-main);color:white;font-weight:700;letter-spacing: 0.5px;}
+        tr:hover{background:#fff3f5;}
+        
+        .controls{display:flex;gap:15px;justify-content:flex-end;margin-top:25px}
+        .btn{padding:10px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:600;transition: background 0.2s;}
+        .btn-danger{background:#ff4d6d;color:white;}
+        .btn-danger:hover{background:#e03c58;}
+        .btn-secondary{background:#e9ecef;color:var(--text);}
+        .btn-secondary:hover{background:#d5d9dc;}
+
+        /* --- LOGIN STYLES --- */
+        #login-view {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--red), var(--red-dark));
+        }
+        .login-container {
+            background: var(--white);
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
+            width: 380px;
+            text-align: center;
+        }
+        .login-container h1 {
+            color: var(--red-dark);
+            margin-bottom: 20px;
+        }
+        .login-container .logo {
+            font-size: 45px;
+            color: var(--gold); 
+            margin-bottom: 10px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: var(--red);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .login-container button:hover {
+            background: var(--red-dark);
+        }
+        .link-section a {
+            text-decoration: none;
+            color: var(--red);
+            font-weight: 500;
+        }
+        .back-store {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 25px;
+            background-color: var(--gold);
+            color: var(--red-dark);
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        /* Responsive Table */
+        @media(max-width:900px){ 
+            .sidebar{position:static;width:100%;height:auto} 
+            .content{margin-left:0;padding:18px} 
+            .info-cards{flex-direction:column}
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr { border: 1px solid #ccc; margin-bottom: 10px; border-radius: 8px; }
+            td { border: none; border-bottom: 1px solid #eee; position: relative; padding-left: 50%; text-align: right; }
+            td:before { 
+                position: absolute; 
+                top: 6px; 
+                left: 6px; 
+                width: 45%; 
+                padding-right: 10px; 
+                white-space: nowrap; 
+                text-align: left;
+                font-weight: 600;
+                color: var(--red-main);
+            }
+            td:nth-of-type(1):before { content: "No"; }
+            td:nth-of-type(2):before { content: "Produk"; }
+            td:nth-of-type(3):before { content: "Harga"; }
+            td:nth-of-type(4):before { content: "Nama"; }
+            td:nth-of-type(5):before { content: "Alamat"; }
+            td:nth-of-type(6):before { content: "Catatan"; }
+            td:nth-of-type(7):before { content: "Tanggal"; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="login-view">
+        <div class="login-container">
+            <div class="logo"><i class="fa-solid fa-user-gear"></i></div>
+            <h1>Login Administrator</h1>
+
+            <input type="text" id="loginUsername" placeholder="Username" />
+            <input type="password" id="loginPassword" placeholder="Password" />
+
+            <button onclick="loginAdmin()">Masuk Dashboard</button>
+            
+            <p style="margin-top: 15px; font-size: 12px; color: #888;">
+                *Gunakan **admin** dan **12345** untuk mencoba.
+            </p>
+
+            <a href="index.html" class="back-store">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Toko
+            </a>
+        </div>
+    </div>
+    
+    <div id="dashboard-view">
+        <div class="sidebar">
+            <div>
+                <h2>Admin DIMSUM</h2>
+                <ul>
+                    <li class="active"><i class="fa-solid fa-house"></i> <a href="#" onclick="return false;">Dashboard</a></li>
+                    <li><i class="fa-solid fa-cart-shopping"></i> <a href="products.html">Toko</a></li>
+                    <li><i class="fa-solid fa-box"></i> <a href="#">Laporan</a></li>
+                </ul>
+            </div>
+            <div style="padding:14px">
+                <div class="logout" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> Logout</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h1>Selamat Datang, Admin</h1>
+
+            <div class="info-cards">
+                <div class="card">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>Total Penjualan</h3>
+                    <p id="total-penjualan">Rp 0</p>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-box-open"></i>
+                    <h3>Total Produk Terjual</h3>
+                    <p id="total-produk">0 Item</p>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-users-line"></i>
+                    <h3>Jumlah Pelanggan</h3>
+                    <p id="total-pelanggan">0</p>
+                </div>
+            </div>
+            
+            <h2>Daftar Pesanan</h2>
+
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="downloadCSV()">Export CSV</button>
+                <button class="btn btn-danger" onclick="hapusSemuaData()">Hapus Semua Data</button>
+            </div>
+
+            <table aria-live="polite">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Produk</th>
+                        <th>Harga</th>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>Catatan</th>
+                        <th>Tanggal</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-pesanan"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIKA UTAMA DISPLAY ---
+        function checkAuthAndDisplay() {
+            const isLoggedIn = localStorage.getItem('loginAdmin') === 'true';
+            const loginView = document.getElementById('login-view');
+            const dashboardView = document.getElementById('dashboard-view');
+            
+            if (isLoggedIn) {
+                loginView.style.display = 'none';
+                dashboardView.style.display = 'block';
+                loadDataAdmin(); // Muat data hanya jika sudah login
+            } else {
+                loginView.style.display = 'flex'; // Menggunakan flex untuk tampilan login
+                dashboardView.style.display = 'none';
+            }
+        }
+
+        // --- LOGIN & LOGOUT ---
+        function loginAdmin() {
+            const user = document.getElementById("loginUsername").value.trim();
+            const pass = document.getElementById("loginPassword").value.trim();
+
+            if (user === "admin" && pass === "12345") {
+                localStorage.setItem("loginAdmin", "true");
+                alert("✅ Login berhasil! Selamat datang Admin.");
+                checkAuthAndDisplay(); // Tampilkan dashboard
+            } else {
+                alert("⚠️ Username atau password salah!");
+            }
+        }
+
+        function logoutAdmin(){
+            if(!confirm('Yakin ingin logout dari sesi Admin?')) return;
+            localStorage.removeItem('loginAdmin');
+            alert('Anda telah logout.');
+            checkAuthAndDisplay(); // Tampilkan halaman login
+        }
+
+        // --- DATA & UTILITY DASHBOARD ---
+        function loadDataAdmin(){
+            const data = JSON.parse(localStorage.getItem('dataAdmin')) || [];
+            const tbody = document.getElementById('tabel-pesanan');
+            tbody.innerHTML = '';
+
+            let totalPenjualan = 0;
+            let produkCount = 0;
+            const pelangganSet = new Set();
+
+            data.forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${idx+1}</td>
+                    <td>${escapeHtml(row.produk)}</td>
+                    <td>Rp ${Number(row.harga).toLocaleString('id-ID')}</td>
+                    <td>${escapeHtml(row.nama)}</td>
+                    <td style="max-width:200px;word-break:break-word">${escapeHtml(row.alamat)}</td>
+                    <td style="max-width:140px;word-break:break-word">${escapeHtml(row.catatan || '')}</td>
+                    <td>${escapeHtml(row.tanggal)}</td>
+                `;
+                tbody.appendChild(tr);
+                totalPenjualan += Number(row.harga);
+                produkCount++;
+                pelangganSet.add(row.nama);
+            });
+
+            document.getElementById('total-penjualan').innerText = 'Rp ' + totalPenjualan.toLocaleString('id-ID');
+            document.getElementById('total-produk').innerText = produkCount + ' Item';
+            document.getElementById('total-pelanggan').innerText = pelangganSet.size;
+        }
+
+        function hapusSemuaData(){
+            if(!confirm('Yakin mau menghapus semua data pesanan? Tindakan ini tidak dapat dibatalkan.')) return;
+            localStorage.removeItem('dataAdmin');
+            loadDataAdmin();
+            alert('Semua data pesanan telah dihapus.');
+        }
+
+        function downloadCSV(){
+            const data = JSON.parse(localStorage.getItem('dataAdmin')) || [];
+            if(data.length === 0){ alert('Tidak ada data untuk diexport.'); return; }
+            const header = ['No','Produk','Harga','Nama','Alamat','Catatan','Tanggal'];
+            const rows = data.map((r,i) => [i+1, r.produk, r.harga, r.nama, r.alamat, r.catatan || '', r.tanggal]);
+            const csvContent = [header, ...rows].map(e => e.map(field => `"${String(field).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data_pesanan_dimsum.csv';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(text){
+            if(!text && text !== 0) return '';
+            return String(text)
+                .replaceAll('&','&amp;')
+                .replaceAll('<','&lt;')
+                .replaceAll('>','&gt;')
+                .replaceAll('"','&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', checkAuthAndDisplay);
+    </script>
+</body>
+</html>

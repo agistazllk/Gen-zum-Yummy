@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout - GOGUMA</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root{
+      --pink:#ff66a3; --pink-dark:#e60073; --bg:#ffe6f2; --white:#fff; --text:#333;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Poppins",sans-serif;background:var(--bg);color:var(--text)}
+    .container{max-width:760px;margin:36px auto;background:var(--white);padding:22px;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,0.08)}
+    h1{color:var(--pink)}
+    .items{margin-top:12px}
+    .item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
+    .total{margin-top:14px;text-align:right;font-weight:800;color:#d63384}
+    label{display:block;margin-top:12px;font-weight:600}
+    input[type="text"], textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;margin-top:6px}
+    .btns{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn-primary{background:var(--pink);color:white;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700}
+    .btn-secondary{background:#f1f1f1;border:0;padding:10px 16px;border-radius:10px;cursor:pointer}
+    small{color:#666}
+    a.link{color:var(--pink);text-decoration:none;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Checkout</h1>
+    <div id="itemsWrapper" class="items"></div>
+    <div id="totalWrapper" class="total">Total: Rp 0</div>
+
+    <label for="nama">Nama Lengkap</label>
+    <input id="nama" type="text" placeholder="Nama penerima" />
+
+    <label for="alamat">Alamat Pengiriman</label>
+    <textarea id="alamat" rows="3" placeholder="Alamat lengkap"></textarea>
+
+    <label for="catatan">Catatan (opsional)</label>
+    <input id="catatan" type="text" placeholder="Contoh: jam pengiriman" />
+
+    <div class="btns">
+      <button class="btn-primary" onclick="kirimKeAdminDanWA()">Kirim ke WhatsApp & Simpan ke Admin</button>
+      <button class="btn-secondary" onclick="batal()">Batal</button>
+      <a class="link" href="products.html">Kembali ke Toko</a>
+    </div>
+    <p style="margin-top:12px"><small>Catatan: data disimpan di browser (localStorage). Tidak diperlukan database.</small></p>
+  </div>
+
+  <script>
+    // Nomor WA admin — ganti sesuai nomor tujuan (format tanpa 0, mis. 6287...)
+    const adminWA = "6287891545344"; // contoh: 6287xxx...
+
+    // Ambil cart dari localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function renderCart(){
+      const wrap = document.getElementById('itemsWrapper');
+      const totalEl = document.getElementById('totalWrapper');
+      wrap.innerHTML = '';
+      let total = 0;
+      cart.forEach((it, idx) => {
+        total += it.price;
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div>${idx+1}. ${it.name}</div><div>Rp ${it.price.toLocaleString('id-ID')}</div>`;
+        wrap.appendChild(div);
+      });
+      totalEl.innerText = 'Total: Rp ' + total.toLocaleString('id-ID');
+    }
+
+    function batal(){
+      // kembali ke products tanpa menghapus cart (opsional)
+      window.location.href = 'products.html';
+    }
+
+    function kirimKeAdminDanWA(){
+      const nama = document.getElementById('nama').value.trim();
+      const alamat = document.getElementById('alamat').value.trim();
+      const catatan = document.getElementById('catatan').value.trim();
+
+      if(!nama || !alamat){
+        alert('Harap isi nama dan alamat!');
+        return;
+      }
+      if(cart.length === 0){
+        alert('Keranjang kosong!');
+        return;
+      }
+
+      // Simpan data pesanan ke localStorage (dataAdmin)
+      const semuaPesanan = JSON.parse(localStorage.getItem('dataAdmin')) || [];
+      const tanggal = new Date().toLocaleString();
+
+      cart.forEach(item => {
+        semuaPesanan.push({
+          produk: item.name,
+          harga: item.price,
+          nama,
+          alamat,
+          catatan,
+          tanggal
+        });
+      });
+      localStorage.setItem('dataAdmin', JSON.stringify(semuaPesanan));
+
+      // Buat pesan WA yang rapi
+      let pesan = `Halo Admin GOGUMA,%0ASaya ingin memesan:%0A`;
+      cart.forEach((it, i) => {
+        pesan += `%0A${i+1}. ${it.name} - Rp ${it.price.toLocaleString('id-ID')}`;
+      });
+      let total = cart.reduce((s, it)=> s + it.price, 0);
+      pesan += `%0A%0ATotal: Rp ${total.toLocaleString('id-ID')}`;
+      pesan += `%0A%0ANama: ${nama}%0AAlamat: ${alamat}`;
+      if(catatan) pesan += `%0Acatatan: ${encodeURIComponent(catatan)}`;
+      pesan += `%0A%0ATerima kasih.`; // akhir pesan
+
+      // Open WhatsApp in new tab
+      const url = `https://wa.me/${adminWA}?text=${encodeURIComponent(decodeURIComponent(pesan))}`;
+      window.open(url, '_blank');
+
+      // Hapus cart (user sudah dikirimkan)
+      localStorage.removeItem('cart');
+      cart = [];
+      alert('Pesanan berhasil dikirim ke WhatsApp dan disimpan untuk admin.');
+      window.location.href = 'products.html';
+    }
+
+    // inisialisasi render
+    renderCart();
+  </script>
+</body>
+</html>

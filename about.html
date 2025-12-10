@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DIMSUM - Tentang Kami</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        /* Dimsum Theme (Red & Gold) - Consistency with index.html */
+        :root {
+            --red: #d90429;
+            --gold: #ffc300;
+            --red-dark: #a4001c;
+            --bg: #fcf8f3; /* Light Cream */
+            --white: #ffffff;
+            --text: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: var(--red);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        .menu li a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .menu li a:hover,
+        .menu li a.active {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 3px;
+        }
+
+        .search-cart {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 25px;
+            padding: 5px 15px;
+            border: 1px solid var(--red-dark);
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 5px;
+            font-size: 14px;
+            width: 180px;
+        }
+
+        .search-box button {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+        }
+
+        .cart {
+            position: relative;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .cart i {
+            color: white;
+        }
+
+        .cart span {
+            position: absolute;
+            top: -10px;
+            right: -12px;
+            background: var(--gold);
+            color: var(--red-dark);
+            font-size: 13px;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        /* ABOUT SECTION STYLING */
+        .about {
+            padding: 50px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .about-card {
+            background: var(--white);
+            max-width: 800px;
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .about-card h1 {
+            font-size: 2.5rem;
+            color: var(--red-dark);
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--gold);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .about-card p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .about-card ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .about-card ul li {
+            font-weight: 600;
+            color: var(--red);
+            flex-basis: 45%;
+            text-align: left;
+        }
+
+        .about-card ul li i {
+            margin-right: 10px;
+            color: var(--gold);
+        }
+
+        /* Footer Styling */
+        footer {
+            background: var(--red-dark);
+            color: white;
+            padding: 40px 0;
+            margin-top: 0; /* Menghapus margin-top bawaan */
+            border-top: 5px solid var(--gold);
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            text-align: left;
+            padding: 0 50px;
+            gap: 30px;
+        }
+
+        .footer-item {
+            min-width: 200px;
+        }
+
+        .footer-item h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .footer-item p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .footer-item i {
+             margin-right: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .menu {
+                display: none; /* Menyembunyikan menu pada layar kecil */
+            }
+            .about-card {
+                padding: 30px;
+            }
+            .about-card h1 {
+                font-size: 2rem;
+            }
+            .search-box input {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-bao"></i>
+            <span>DIMSUM</span>
+        </div>
+
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Produk</a></li>
+            <li><a class="active" href="about.html">Tentang Kami</a></li>
+            <li><a href="contact.html">Kontak</a></li>
+        </ul>
+
+        <div class="search-cart">
+            <div class="search-box">
+                <input type="text" placeholder="Cari menu favorit..." />
+                <button><i class="fa fa-search"></i></button>
+            </div>
+            <div class="cart">
+                <i class="fa fa-shopping-cart"></i>
+                <span>0</span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="about">
+        <div class="about-card">
+            <h1>Tentang Dimsum & Mango Sago</h1>
+            
+            <p>
+                Didirikan atas dasar kecintaan pada kuliner Asia yang autentik, DIMSUM LEZAT hadir untuk menyajikan dua hidangan ikonik dengan kualitas premium:
+            </p>
+
+            <p>
+                1. Dimsum Kukus Hangat:Kami menggunakan daging ayam segar, bumbu rahasia, dan proses kukus yang tepat untuk menghasilkan setiap gigitan dimsum yang padat, juicy, dan penuh rasa. Dimsum kami adalah perwujudan kehangatan dan tradisi kuliner Tiongkok.
+            </p>
+            
+            <p>
+                2. Mango Sago Segar:Untuk menyeimbangkan kelezatan dimsum, kami menyajikan Mango Sago, dessert segar khas Hong Kong. Dibuat dengan mangga matang pilihan, santan kelapa premium, dan sagu mutiara yang kenyal, menjadikannya penutup yang sempurna untuk menyegarkan lidah Anda.
+            </p>
+            
+            <p style="text-align:center; margin-top: 30px; font-weight: 600; color: var(--red);">
+                Komitmen kami adalah menyajikan perpaduan rasa terbaik:
+                <h1>Hangat di awal, segar di akhir.</h1>
+            </p>
+            
+            <ul>
+                <li><i class="fa-solid fa-star"></i> Bahan Baku Pilihan Terbaik</li>
+                <li><i class="fa-solid fa-leaf"></i> Proses Pembuatan Higienis</li>
+                <li><i class="fa-solid fa-clock"></i> Disajikan Selalu Fresh</li>
+                <li><i class="fa-solid fa-heart"></i> Rasa Autentik dan Spesial</li>
+            </ul>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-item">
+                <h3>DIMSUM LEZAT</h3>
+                <p>Menyajikan dimsum hangat dan dessert mango sago segar.</p>
+            </div>
+            <div class="footer-item">
+                <h3>Kontak Kami</h3>
+                <p><i class="fa fa-phone-alt"></i> +62 812-3456-7890</p>
+                <p><i class="fa fa-envelope"></i> order@dimsumlezat.com</p>
+            </div>
+            <div class="footer-item">
+                <h3>Jam Buka</h3>
+                <p><i class="fa fa-calendar-alt"></i> Selasa - Minggu: 10:00 - 22:00</p>
+                <p><i class="fa fa-calendar-times"></i> Senin: Tutup</p>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 Toko Dimsum Premium. Hak cipta dilindungi.
+        </div>
+    </footer>
+</body>
+</html>

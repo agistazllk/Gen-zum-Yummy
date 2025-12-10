@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Pelanggan - DIMSUM LEZAT</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* Dimsum Theme Variables */
+        :root {
+            --red: #d90429;
+            --gold: #ffc300;
+            --red-dark: #a4001c;
+            --white: #fff;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            /* Background Merah & Emas */
+            background: linear-gradient(135deg, var(--red), var(--red-dark));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: var(--white);
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
+            width: 380px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            /* Mengganti ikon dan warna */
+            font-size: 45px;
+            color: var(--gold); 
+            margin-bottom: 10px;
+        }
+
+        .login-container h1 {
+            color: var(--red-dark);
+            font-size: 26px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .login-container input:focus {
+            border-color: var(--red);
+            outline: none;
+            box-shadow: 0px 0px 6px rgba(217, 4, 41, 0.4);
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: var(--red);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-container button:hover {
+            background: var(--red-dark);
+            transform: scale(1.01);
+        }
+
+        .link-section {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .link-section a {
+            text-decoration: none;
+            color: var(--red);
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .link-section a:hover {
+            text-decoration: underline;
+            color: var(--red-dark);
+        }
+
+        .back-store {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 25px;
+            background-color: var(--gold);
+            color: var(--red-dark);
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .back-store:hover {
+            background-color: #e0ac00;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="logo"><i class="fa-solid fa-bao"></i></div>
+        <h1>Login Pelanggan DIMSUM</h1>
+
+        <input type="text" id="username" placeholder="Email atau Username" />
+        <input type="password" id="password" placeholder="Password" />
+
+        <button onclick="loginUser()">Masuk</button>
+        
+        <p style="margin-top: 15px; font-size: 12px; color: #888;">
+             *Gunakan **user** dan **123** untuk mencoba.
+        </p>
+
+        <div class="link-section">
+            <a href="register.html">Daftar Akun Baru</a>
+            <a href="forgot.html">Lupa Password?</a>
+        </div>
+
+        <a href="products.html" class="back-store">
+            <i class="fa-solid fa-arrow-left"></i> Lihat Menu
+        </a>
+    </div>
+
+    <script>
+        // Logika login untuk pelanggan (simulasi)
+        function loginUser() {
+            const user = document.getElementById("username").value.trim();
+            const pass = document.getElementById("password").value.trim();
+
+            // Kredensial simulasi untuk Pelanggan (user: user, pass: 123)
+            if (user === "user" && pass === "123") {
+                // Set status login user di LocalStorage
+                localStorage.setItem("userLoggedIn", "true"); 
+                
+                alert("✅ Login berhasil! Selamat berbelanja.");
+                // Arahkan ke halaman produk agar user bisa langsung beli
+                window.location.href = "products.html";
+            } else {
+                alert("⚠️ Email/Username atau password salah. Coba: user/123");
+            }
+        }
+    </script>
+</body>
+</html>

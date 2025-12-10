@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemesanan - GOGUMA</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">🍠 GOGUMA</div>
+  </nav>
+
+  <section class="order-section">
+    <h1>Form Pemesanan</h1>
+    <form id="orderForm">
+      <label>Nama Lengkap</label>
+      <input type="text" id="nama" required>
+
+      <label>Alamat</label>
+      <textarea id="alamat" required></textarea>
+
+      <label>Pilih Produk</label>
+      <select id="produk" required>
+        <option value="">-- Pilih Produk --</option>
+        <option>Goguma Cake</option>
+        <option>Goguma Bites</option>
+      </select>
+
+      <label>Jumlah</label>
+      <input type="number" id="jumlah" min="1" required>
+
+      <button type="submit" class="btn">Kirim Pesanan</button>
+    </form>
+  </section>
+</body>
+</html>
